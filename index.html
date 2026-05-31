@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Lo sfondo scuro di tutto il sito */
+    body {
+      background-color: #111; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Prende tutta l'altezza dello schermo */
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    /* Come è fatto il bottone a riposo */
+    .bottone-neon {
+      background-color: transparent;
+      color: #00f3ff; /* Azzurro neon */
+      border: 2px solid #00f3ff;
+      padding: 15px 30px;
+      font-size: 20px;
+      border-radius: 10px; /* Bordi arrotondati */
+      cursor: pointer;
+      transition: all 0.3s ease; /* Questo comando crea l'animazione fluida */
+      box-shadow: 0 0 10px #00f3ff; /* L'alone luminoso intorno */
+    }
+
+    /* Cosa succede quando passi il dito o il mouse sul bottone */
+    .bottone-neon:hover {
+      background-color: #00f3ff;
+      color: #111; /* Il testo diventa scuro per fare contrasto */
+      box-shadow: 0 0 20px #00f3ff, 0 0 40px #00f3ff; /* La luce aumenta di intensità */
+      transform: scale(1.1); /* Il bottone fa un piccolo balzo in avanti */
+    }
+  </style>
+</head>
+<body>
+
+  <button class="bottone-neon">Contattami (@lele3000)</button>
+
+</body>
+</html>
+
