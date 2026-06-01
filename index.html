@@ -1,43 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-  <style>
-    /* Lo sfondo scuro di tutto il sito */
-    body {
-      background-color: #111; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh; /* Prende tutta l'altezza dello schermo */
-      margin: 0;
-      font-family: sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@lele3000 | Developer & Reseller</title>
+    <!-- Importo una libreria per le icone di Telegram e Discord -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Impostazioni generali e sfondo scuro */
+        body {
+            background-color: #0f0f13;
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
 
-    /* Come è fatto il bottone a riposo */
-    .bottone-neon {
-      background-color: transparent;
-      color: #00f3ff; /* Azzurro neon */
-      border: 2px solid #00f3ff;
-      padding: 15px 30px;
-      font-size: 20px;
-      border-radius: 10px; /* Bordi arrotondati */
-      cursor: pointer;
-      transition: all 0.3s ease; /* Questo comando crea l'animazione fluida */
-      box-shadow: 0 0 10px #00f3ff; /* L'alone luminoso intorno */
-    }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
 
-    /* Cosa succede quando passi il dito o il mouse sul bottone */
-    .bottone-neon:hover {
-      background-color: #00f3ff;
-      color: #111; /* Il testo diventa scuro per fare contrasto */
-      box-shadow: 0 0 20px #00f3ff, 0 0 40px #00f3ff; /* La luce aumenta di intensità */
-      transform: scale(1.1); /* Il bottone fa un piccolo balzo in avanti */
-    }
-  </style>
+        /* Sezione del Titolo (L'intestazione) */
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .testo-neon {
+            color: #00f3ff;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .sottotitolo {
+            color: #a0a0b0;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* La griglia per i riquadri dei progetti */
+        .griglia-servizi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* Come sono fatte le singole Card */
+        .card {
+            background-color: #1a1a24;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #2d2d3d;
+            transition: all 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: #00f3ff;
+            box-shadow: 0 15px 30px rgba(0, 243, 255, 0.15);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            color: #00f3ff;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #b3b3c1;
+            font-size: 1rem;
+        }
+
+        /* Sezione Contatti */
+        .contatti {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #2d2d3d;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 35px;
+            margin: 10px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Bottone Telegram */
+        .btn-telegram {
+            background-color: transparent;
+            color: #0088cc;
+            border: 2px solid #0088cc;
+        }
+
+        .btn-telegram:hover {
+            background-color: #0088cc;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 136, 204, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Bottone Discord */
+        .btn-discord {
+            background-color: transparent;
+            color: #5865F2;
+            border: 2px solid #5865F2;
+        }
+
+        .btn-discord:hover {
+            background-color: #5865F2;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Animazione di entrata */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
-  <button class="bottone-neon">Contattami (@lele3000)</button>
+    <div class="container">
+        
+        <!-- Intestazione -->
+        <header>
+            <h1>Ciao, sono <span class="testo-neon">@lele3000</span></h1>
+            <p class="sottotitolo">Più di 3 anni di esperienza sul campo. Sviluppatore software, creatore di tool digitali e punto di riferimento per il mercato del resell.</p>
+        </header>
+
+        <!-- Sezione Competenze e Servizi -->
+        <div class="griglia-servizi">
+            
+            <!-- Card 1: Web App -->
+            <div class="card">
+                <i class="fa-solid fa-code"></i>
+                <h3>Siti & Web App</h3>
+                <p>Sviluppo siti web e applicazioni web fluide e interattive. Dalle landing page ad alto impatto grafico fino a tool complessi per l'analisi e la gestione dei profili social.</p>
+            </div>
+
+            <!-- Card 2: Bot -->
+            <div class="card">
+                <i class="fa-solid fa-robot"></i>
+                <h3>Bot Discord & Telegram</h3>
+                <p>Programmazione di bot su misura per automatizzare le tue community. Dai sistemi di gestione server ai bot shop completi con cataloghi e comandi personalizzati.</p>
+            </div>
+
+            <!-- Card 3: Resell & Forniture -->
+            <div class="card">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <h3>Lele Shop & GG Market</h3>
+                <p>La tua fonte per il resell digitale. Offro abbonamenti premium, account e risorse gaming a prezzi stracciati. Il partner ideale per chi cerca fornitori affidabili per il proprio business B2B.</p>
+            </div>
+
+        </div>
+
+        <!-- Sezione Contatti -->
+        <div class="contatti">
+            <h2 style="margin-bottom: 30px;">Lavoriamo Insieme</h2>
+            <!-- Sostituisci i link con quelli diretti ai tuoi DM se li hai, per ora aprono le app generiche -->
+            <a href="https://t.me/llele3000" target="_blank" class="btn btn-telegram">
+                <i class="fa-brands fa-telegram"></i> Telegram
+            </a>
+            <a href="https://discordapp.com/users/llele3000" target="_blank" class="btn btn-discord">
+                <i class="fa-brands fa-discord"></i> Discord
+            </a>
+        </div>
+
+    </div>
 
 </body>
 </html>
