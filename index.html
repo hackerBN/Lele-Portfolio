@@ -13,13 +13,13 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #050508; /* Sfondo ancora più scuro per l'effetto neon */
+            background-color: #050508;
             color: #ffffff;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden; /* Nasconde lo scroll orizzontale */
+            overflow-x: hidden;
         }
 
-        /* --- SCHERMATA DI BENVENUTO (OVERLAY) --- */
+        /* --- SCHERMATA DI BENVENUTO --- */
         #welcome-screen {
             position: fixed;
             top: 0;
@@ -31,23 +31,21 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999; /* Sta sopra a tutto */
-            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease-in-out;
+            z-index: 9999;
+            /* La schermata scura svanisce dolcemente alla fine */
+            transition: opacity 1.5s ease 3.5s; 
         }
 
         .welcome-text {
             font-size: 4rem;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             color: #fff;
             letter-spacing: 5px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            animation: pulse-text 2s infinite;
-        }
-
-        @keyframes pulse-text {
-            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-            50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px #00f3ff; }
+            text-shadow: 0 0 15px #00f3ff;
+            /* Preparo il testo per un'animazione fluida senza scatti */
+            will-change: transform, opacity, text-shadow;
+            transition: transform 4s cubic-bezier(0.5, 0, 0.1, 1), opacity 2s ease 2s, text-shadow 0.2s;
         }
 
         .btn-enter {
@@ -61,60 +59,76 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+            z-index: 10;
         }
 
         .btn-enter:hover {
             background-color: #00f3ff;
             color: #050508;
-            box-shadow: 0 0 30px #00f3ff, 0 0 60px #00f3ff;
+            box-shadow: 0 0 30px #00f3ff;
             transform: scale(1.05);
         }
 
-        /* Effetto linee warp/iperspazio (Inizialmente nascosto) */
-        .warp-lines {
+        /* Effetto anelli di luce per il viaggio 3D */
+        .neon-ring {
             position: absolute;
-            top: 50%;
+            top: 50%; 
             left: 50%;
-            width: 200vw;
-            height: 200vh;
-            transform: translate(-50%, -50%);
-            background: repeating-radial-gradient(
-                circle at center,
-                transparent 0,
-                transparent 10px,
-                rgba(0, 243, 255, 0.1) 11px,
-                transparent 12px
-            );
+            width: 100px;
+            height: 100px;
+            border: 2px solid #00f3ff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00f3ff inset, 0 0 20px #00f3ff;
+            transform: translate(-50%, -50%) scale(0);
             opacity: 0;
             pointer-events: none;
-            z-index: -1;
+            will-change: transform, opacity;
         }
 
-        /* Classi aggiunte da JS durante l'animazione */
-        .animating-out #welcome-screen {
-            transform: scale(5) translateZ(1000px); /* Zoom in avanti fortissimo */
+        /* --- COSA SUCCEDE QUANDO CLICCHI (L'ANIMAZIONE LUNGA) --- */
+        
+        /* 1. Il bottone scompare subito */
+        .animating-out .btn-enter {
+            opacity: 0;
+            transform: translateY(30px);
+            pointer-events: none;
+        }
+
+        /* 2. Il testo viaggia verso di te velocissimo e perde l'ombra per non laggare */
+        .animating-out .welcome-text {
+            text-shadow: none; 
+            color: rgba(0, 243, 255, 0.3);
+            /* translate3d forza l'uso della scheda grafica per zero lag */
+            transform: scale(30) translate3d(0,0,0); 
             opacity: 0;
         }
-        
-        .animating-out .warp-lines {
-            animation: warp-drive 1.5s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+
+        /* 3. Gli anelli di luce ti vengono addosso uno dopo l'altro */
+        .animating-out .ring-1 { animation: warp-ring 3.5s cubic-bezier(0.6, 0, 0.2, 1) 0.2s forwards; }
+        .animating-out .ring-2 { animation: warp-ring 3.5s cubic-bezier(0.6, 0, 0.2, 1) 0.8s forwards; }
+        .animating-out .ring-3 { animation: warp-ring 3.5s cubic-bezier(0.6, 0, 0.2, 1) 1.4s forwards; }
+
+        @keyframes warp-ring {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            30% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(25); opacity: 0; }
         }
 
-        @keyframes warp-drive {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(2); background-color: rgba(0,243,255,0.2); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(5); }
+        /* La schermata intera scompare alla fine */
+        .animating-out#welcome-screen {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        /* --- CONTENUTO PRINCIPALE (PORTFOLIO) --- */
+
+        /* --- CONTENUTO PRINCIPALE (IL PORTFOLIO) --- */
         #main-content {
-            opacity: 0; /* Inizialmente invisibile */
+            opacity: 0;
             transform: translateY(50px);
-            transition: opacity 1s ease 1s, transform 1s ease 1s; /* Appare DOPO l'animazione di benvenuto */
-            display: none; /* Nascosto fisicamente finché non si clicca */
+            /* Appare dolcemente dopo 3 secondi dall'inizio del viaggio */
+            transition: opacity 2s ease 3s, transform 2s ease 3s; 
+            display: none; 
         }
 
         .content-visible #main-content {
@@ -123,35 +137,13 @@
             transform: translateY(0);
         }
 
-        /* Stili originali del tuo portfolio */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 50px 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .testo-neon {
-            color: #00f3ff;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
-        }
-
-        .sottotitolo {
-            color: #a0a0b0;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
+        /* Stili della griglia e contatti (invariati, perfetti così) */
+        .container { max-width: 1100px; margin: 0 auto; padding: 50px 20px; }
+        header { text-align: center; margin-bottom: 60px; }
+        h1 { font-size: 3rem; margin-bottom: 10px; }
+        .testo-neon { color: #00f3ff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.7); }
+        .sottotitolo { color: #a0a0b0; font-size: 1.2rem; max-width: 600px; margin: 0 auto; }
+        
         .griglia-servizi {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -173,80 +165,37 @@
             box-shadow: 0 15px 30px rgba(0, 243, 255, 0.15);
         }
 
-        .card i {
-            font-size: 2.5rem;
-            color: #00f3ff;
-            margin-bottom: 20px;
-        }
+        .card i { font-size: 2.5rem; color: #00f3ff; margin-bottom: 20px; }
+        .card h3 { font-size: 1.5rem; margin-top: 0; margin-bottom: 15px; }
+        .card p { color: #b3b3c1; font-size: 1rem; }
 
-        .card h3 {
-            font-size: 1.5rem;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            color: #b3b3c1;
-            font-size: 1rem;
-        }
-
-        .contatti {
-            text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid #2d2d3d;
-        }
-
+        .contatti { text-align: center; padding-top: 40px; border-top: 1px solid #2d2d3d; }
+        
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 35px;
-            margin: 10px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 15px 35px; margin: 10px; border-radius: 10px;
+            font-size: 1.1rem; font-weight: bold; text-decoration: none;
+            cursor: pointer; transition: all 0.3s ease;
         }
 
-        .btn-telegram {
-            background-color: transparent;
-            color: #0088cc;
-            border: 2px solid #0088cc;
-        }
+        .btn-telegram { background-color: transparent; color: #0088cc; border: 2px solid #0088cc; }
+        .btn-telegram:hover { background-color: #0088cc; color: #ffffff; box-shadow: 0 0 20px rgba(0, 136, 204, 0.6); transform: scale(1.05); }
 
-        .btn-telegram:hover {
-            background-color: #0088cc;
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(0, 136, 204, 0.6);
-            transform: scale(1.05);
-        }
-
-        .btn-discord {
-            background-color: transparent;
-            color: #5865F2;
-            border: 2px solid #5865F2;
-        }
-
-        .btn-discord:hover {
-            background-color: #5865F2;
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.6);
-            transform: scale(1.05);
-        }
+        .btn-discord { background-color: transparent; color: #5865F2; border: 2px solid #5865F2; }
+        .btn-discord:hover { background-color: #5865F2; color: #ffffff; box-shadow: 0 0 20px rgba(88, 101, 242, 0.6); transform: scale(1.05); }
     </style>
 </head>
 <body>
 
-    <!-- SCHERMATA DI BENVENUTO -->
     <div id="welcome-screen">
-        <div class="warp-lines"></div>
+        <div class="neon-ring ring-1"></div>
+        <div class="neon-ring ring-2"></div>
+        <div class="neon-ring ring-3"></div>
+        
         <div class="welcome-text">BENVENUTO</div>
         <button class="btn-enter" onclick="startTransition()">Continua</button>
     </div>
 
-    <!-- CONTENUTO PRINCIPALE (Nascosto all'inizio) -->
     <div id="main-content">
         <div class="container">
             <header>
@@ -284,25 +233,24 @@
         </div>
     </div>
 
-    <!-- SCRIPT PER GESTIRE L'ANIMAZIONE -->
     <script>
         function startTransition() {
-            // Aggiunge la classe al body per far partire l'animazione "warp"
+            // Faccio partire tutto il blocco di animazioni CSS aggiungendo la classe
             document.body.classList.add('animating-out');
             
-            // Prepara il contenuto principale rendendolo fisicamente presente (ma ancora invisibile per il CSS)
+            // Rendo il contenuto presente così può fare la transizione sfumata
             document.getElementById('main-content').style.display = 'block';
-
-            // Aspetta che l'animazione di uscita sia finita (1.5 secondi)
+            
+            // Attivo l'apparizione lenta del sito sotto all'animazione
             setTimeout(() => {
-                // Rimuove la schermata di benvenuto dal DOM
-                document.getElementById('welcome-screen').style.display = 'none';
-                
-                // Aggiunge la classe che fa comparire il contenuto principale con un fade-in dal basso
                 document.body.classList.add('content-visible');
-            }, 1000); // Il timer inizia a far apparire il portfolio mentre lo zoom finisce
+            }, 100);
+
+            // Aspetto 5 secondi esatti che l'animazione di volo sia finita per spegnere la schermata nera
+            setTimeout(() => {
+                document.getElementById('welcome-screen').style.display = 'none';
+            }, 5000); 
         }
     </script>
 </body>
 </html>
-
