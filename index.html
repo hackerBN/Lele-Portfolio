@@ -4,31 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@lele3000 | Developer & Reseller</title>
-    <!-- Importo una libreria per le icone di Telegram e Discord -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* Impostazioni generali e sfondo scuro */
-        body {
-            background-color: #0f0f13;
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        /* Impostazioni generali */
+        body, html {
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            width: 100%;
+            height: 100%;
+            background-color: #050508; /* Sfondo ancora più scuro per l'effetto neon */
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden; /* Nasconde lo scroll orizzontale */
         }
 
+        /* --- SCHERMATA DI BENVENUTO (OVERLAY) --- */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #050508;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Sta sopra a tutto */
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease-in-out;
+        }
+
+        .welcome-text {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            color: #fff;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            animation: pulse-text 2s infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+            50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px #00f3ff; }
+        }
+
+        .btn-enter {
+            background-color: transparent;
+            color: #00f3ff;
+            border: 2px solid #00f3ff;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-enter:hover {
+            background-color: #00f3ff;
+            color: #050508;
+            box-shadow: 0 0 30px #00f3ff, 0 0 60px #00f3ff;
+            transform: scale(1.05);
+        }
+
+        /* Effetto linee warp/iperspazio (Inizialmente nascosto) */
+        .warp-lines {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200vw;
+            height: 200vh;
+            transform: translate(-50%, -50%);
+            background: repeating-radial-gradient(
+                circle at center,
+                transparent 0,
+                transparent 10px,
+                rgba(0, 243, 255, 0.1) 11px,
+                transparent 12px
+            );
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Classi aggiunte da JS durante l'animazione */
+        .animating-out #welcome-screen {
+            transform: scale(5) translateZ(1000px); /* Zoom in avanti fortissimo */
+            opacity: 0;
+        }
+        
+        .animating-out .warp-lines {
+            animation: warp-drive 1.5s cubic-bezier(0.5, 0, 0.5, 1) forwards;
+        }
+
+        @keyframes warp-drive {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(2); background-color: rgba(0,243,255,0.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(5); }
+        }
+
+        /* --- CONTENUTO PRINCIPALE (PORTFOLIO) --- */
+        #main-content {
+            opacity: 0; /* Inizialmente invisibile */
+            transform: translateY(50px);
+            transition: opacity 1s ease 1s, transform 1s ease 1s; /* Appare DOPO l'animazione di benvenuto */
+            display: none; /* Nascosto fisicamente finché non si clicca */
+        }
+
+        .content-visible #main-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Stili originali del tuo portfolio */
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 50px 20px;
         }
 
-        /* Sezione del Titolo (L'intestazione) */
         header {
             text-align: center;
             margin-bottom: 60px;
-            animation: fadeInDown 1s ease-out;
         }
 
         h1 {
@@ -48,7 +152,6 @@
             margin: 0 auto;
         }
 
-        /* La griglia per i riquadri dei progetti */
         .griglia-servizi {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -56,7 +159,6 @@
             margin-bottom: 60px;
         }
 
-        /* Come sono fatte le singole Card */
         .card {
             background-color: #1a1a24;
             padding: 30px;
@@ -88,7 +190,6 @@
             font-size: 1rem;
         }
 
-        /* Sezione Contatti */
         .contatti {
             text-align: center;
             padding-top: 40px;
@@ -109,7 +210,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Bottone Telegram */
         .btn-telegram {
             background-color: transparent;
             color: #0088cc;
@@ -123,7 +223,6 @@
             transform: scale(1.05);
         }
 
-        /* Bottone Discord */
         .btn-discord {
             background-color: transparent;
             color: #5865F2;
@@ -136,64 +235,74 @@
             box-shadow: 0 0 20px rgba(88, 101, 242, 0.6);
             transform: scale(1.05);
         }
-
-        /* Animazione di entrata */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        
-        <!-- Intestazione -->
-        <header>
-            <h1>Ciao, sono <span class="testo-neon">@lele3000</span></h1>
-            <p class="sottotitolo">Più di 3 anni di esperienza sul campo. Sviluppatore software, creatore di tool digitali e punto di riferimento per il mercato del resell.</p>
-        </header>
-
-        <!-- Sezione Competenze e Servizi -->
-        <div class="griglia-servizi">
-            
-            <!-- Card 1: Web App -->
-            <div class="card">
-                <i class="fa-solid fa-code"></i>
-                <h3>Siti & Web App</h3>
-                <p>Sviluppo siti web e applicazioni web fluide e interattive. Dalle landing page ad alto impatto grafico fino a tool complessi per l'analisi e la gestione dei profili social.</p>
-            </div>
-
-            <!-- Card 2: Bot -->
-            <div class="card">
-                <i class="fa-solid fa-robot"></i>
-                <h3>Bot Discord & Telegram</h3>
-                <p>Programmazione di bot su misura per automatizzare le tue community. Dai sistemi di gestione server ai bot shop completi con cataloghi e comandi personalizzati.</p>
-            </div>
-
-            <!-- Card 3: Resell & Forniture -->
-            <div class="card">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <h3>Lele Shop & GG Market</h3>
-                <p>La tua fonte per il resell digitale. Offro abbonamenti premium, account e risorse gaming a prezzi stracciati. Il partner ideale per chi cerca fornitori affidabili per il proprio business B2B.</p>
-            </div>
-
-        </div>
-
-        <!-- Sezione Contatti -->
-        <div class="contatti">
-            <h2 style="margin-bottom: 30px;">Lavoriamo Insieme</h2>
-            <!-- Sostituisci i link con quelli diretti ai tuoi DM se li hai, per ora aprono le app generiche -->
-            <a href="https://t.me/llele3000" target="_blank" class="btn btn-telegram">
-                <i class="fa-brands fa-telegram"></i> Telegram
-            </a>
-            <a href="https://discordapp.com/users/llele3000" target="_blank" class="btn btn-discord">
-                <i class="fa-brands fa-discord"></i> Discord
-            </a>
-        </div>
-
+    <!-- SCHERMATA DI BENVENUTO -->
+    <div id="welcome-screen">
+        <div class="warp-lines"></div>
+        <div class="welcome-text">BENVENUTO</div>
+        <button class="btn-enter" onclick="startTransition()">Continua</button>
     </div>
 
+    <!-- CONTENUTO PRINCIPALE (Nascosto all'inizio) -->
+    <div id="main-content">
+        <div class="container">
+            <header>
+                <h1>Ciao, sono <span class="testo-neon">@lele3000</span></h1>
+                <p class="sottotitolo">Più di 3 anni di esperienza sul campo. Sviluppatore software, creatore di tool digitali e punto di riferimento per il mercato del resell.</p>
+            </header>
+
+            <div class="griglia-servizi">
+                <div class="card">
+                    <i class="fa-solid fa-code"></i>
+                    <h3>Siti & Web App</h3>
+                    <p>Sviluppo siti web e applicazioni web fluide e interattive. Dalle landing page ad alto impatto grafico fino a tool complessi per l'analisi e la gestione dei profili social.</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-robot"></i>
+                    <h3>Bot Discord & Telegram</h3>
+                    <p>Programmazione di bot su misura per automatizzare le tue community. Dai sistemi di gestione server ai bot shop completi con cataloghi e comandi personalizzati.</p>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <h3>Lele Shop & GG Market</h3>
+                    <p>La tua fonte per il resell digitale. Offro abbonamenti premium, account e risorse gaming a prezzi stracciati. Il partner ideale per chi cerca fornitori affidabili per il proprio business B2B.</p>
+                </div>
+            </div>
+
+            <div class="contatti">
+                <h2 style="margin-bottom: 30px;">Lavoriamo Insieme</h2>
+                <a href="https://t.me/llele3000" target="_blank" class="btn btn-telegram">
+                    <i class="fa-brands fa-telegram"></i> Telegram
+                </a>
+                <a href="https://discordapp.com/users/llele3000" target="_blank" class="btn btn-discord">
+                    <i class="fa-brands fa-discord"></i> Discord
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT PER GESTIRE L'ANIMAZIONE -->
+    <script>
+        function startTransition() {
+            // Aggiunge la classe al body per far partire l'animazione "warp"
+            document.body.classList.add('animating-out');
+            
+            // Prepara il contenuto principale rendendolo fisicamente presente (ma ancora invisibile per il CSS)
+            document.getElementById('main-content').style.display = 'block';
+
+            // Aspetta che l'animazione di uscita sia finita (1.5 secondi)
+            setTimeout(() => {
+                // Rimuove la schermata di benvenuto dal DOM
+                document.getElementById('welcome-screen').style.display = 'none';
+                
+                // Aggiunge la classe che fa comparire il contenuto principale con un fade-in dal basso
+                document.body.classList.add('content-visible');
+            }, 1000); // Il timer inizia a far apparire il portfolio mentre lo zoom finisce
+        }
+    </script>
 </body>
 </html>
 
