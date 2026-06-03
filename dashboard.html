@@ -16,7 +16,7 @@
             font-family: 'Segoe UI', sans-serif;
             display: flex;
             height: 100vh;
-            overflow: hidden; /* Niente barre di scorrimento, sembra un'app vera */
+            overflow: hidden;
         }
 
         /* Il menu laterale fisso */
@@ -28,7 +28,6 @@
             display: flex;
             flex-direction: column;
             box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            animation: slideIn 0.5s ease-out;
         }
 
         .logo {
@@ -47,10 +46,10 @@
             cursor: pointer;
             transition: all 0.3s;
             color: #a0a0b0;
-            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 15px;
+            font-size: 1.1rem;
         }
 
         .menu-item:hover, .menu-item.attivo {
@@ -64,7 +63,6 @@
             flex: 1;
             padding: 40px;
             overflow-y: auto;
-            animation: fadeIn 1s ease-in;
         }
 
         .titolo-sezione {
@@ -75,6 +73,16 @@
         .sottotitolo {
             color: #a0a0b0;
             margin-bottom: 40px;
+        }
+
+        /* Gestione delle "Stanze" (Sezioni) */
+        .sezione {
+            display: none; /* Nasconde tutte le sezioni di base */
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .sezione.attiva {
+            display: block; /* Mostra solo quella attiva */
         }
 
         /* La griglia con i 5 Stampini */
@@ -92,8 +100,6 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
         }
 
         .stampino i {
@@ -103,37 +109,34 @@
             transition: all 0.4s;
         }
 
-        .stampino h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-        }
+        .stampino h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .stampino p { color: #808090; font-size: 0.9rem; margin: 0; }
 
-        .stampino p {
-            color: #808090;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        /* L'effetto magico quando si tocca uno stampino */
         .stampino:hover {
             transform: translateY(-5px);
             border-color: #00f3ff;
             box-shadow: 0 10px 20px rgba(0, 243, 255, 0.1);
         }
-
         .stampino:hover i {
             color: #00f3ff;
             text-shadow: 0 0 15px #00f3ff;
             transform: scale(1.1);
         }
 
-        /* Animazioni di entrata */
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
+        /* Stile per i messaggi delle sezioni vuote */
+        .box-vuoto {
+            background-color: #12121a;
+            border: 1px dashed #4a4a6a;
+            border-radius: 12px;
+            padding: 50px;
+            text-align: center;
+            color: #a0a0b0;
         }
+
+        .box-vuoto i { font-size: 4rem; color: #2d2d3d; margin-bottom: 20px; }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -143,48 +146,76 @@
     <div class="sidebar">
         <div class="logo">@lele3000<br><span style="font-size:0.8rem; color:#a0a0b0; text-shadow:none;">Control Center</span></div>
         
-        <a href="#" class="menu-item attivo"><i class="fa-solid fa-wand-magic-sparkles"></i> Crea Nuovo Bot</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-robot"></i> I Miei Bot</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-chart-line"></i> Statistiche Vendite</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-crown"></i> Abbonamento VIP</a>
+        <div class="menu-item attivo" onclick="cambiaSezione('crea', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Crea Nuovo Bot</div>
+        <div class="menu-item" onclick="cambiaSezione('miei-bot', this)"><i class="fa-solid fa-robot"></i> I Miei Bot</div>
+        <div class="menu-item" onclick="cambiaSezione('statistiche', this)"><i class="fa-solid fa-chart-line"></i> Statistiche</div>
+        <div class="menu-item" onclick="cambiaSezione('vip', this)"><i class="fa-solid fa-crown"></i> Piano VIP</div>
     </div>
 
     <div class="area-lavoro">
-        <h1 class="titolo-sezione">Seleziona uno Stampino</h1>
-        <p class="sottotitolo">Scegli il modello di partenza per il tuo nuovo bot. Potrai personalizzarlo nel prossimo passaggio.</p>
+        
+        <div id="sezione-crea" class="sezione attiva">
+            <h1 class="titolo-sezione">Seleziona uno Stampino</h1>
+            <p class="sottotitolo">Scegli il modello di partenza per il tuo nuovo bot.</p>
 
-        <div class="griglia-stampini">
-            <div class="stampino">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h3>Il Guardiano</h3>
-                <p>Moderazione, benvenuto ai nuovi utenti e sistema Ticket per l'assistenza.</p>
-            </div>
-            
-            <div class="stampino">
-                <i class="fa-solid fa-shop"></i>
-                <h3>Il Mercante</h3>
-                <p>Vetrina automatica per vendere prodotti digitali con pagamenti integrati.</p>
-            </div>
-
-            <div class="stampino">
-                <i class="fa-solid fa-gamepad"></i>
-                <h3>L'Intrattenitore</h3>
-                <p>Sistema di livelli, minigiochi in chat e comandi musicali per la community.</p>
-            </div>
-
-            <div class="stampino">
-                <i class="fa-solid fa-bullhorn"></i>
-                <h3>Il Notiziario</h3>
-                <p>Invia avvisi in automatico per nuovi video, sconti o notizie importanti.</p>
-            </div>
-
-            <div class="stampino">
-                <i class="fa-solid fa-brain"></i>
-                <h3>L'Assistente AI</h3>
-                <p>Un bot intelligente con cui gli utenti possono parlare liberamente in chat.</p>
+            <div class="griglia-stampini">
+                <div class="stampino"><i class="fa-solid fa-shield-halved"></i><h3>Il Guardiano</h3><p>Moderazione e supporto.</p></div>
+                <div class="stampino"><i class="fa-solid fa-shop"></i><h3>Il Mercante</h3><p>Vetrina per vendere in automatico.</p></div>
+                <div class="stampino"><i class="fa-solid fa-gamepad"></i><h3>L'Intrattenitore</h3><p>Livelli e giochi per la community.</p></div>
+                <div class="stampino"><i class="fa-solid fa-bullhorn"></i><h3>Il Notiziario</h3><p>Avvisi e notizie in automatico.</p></div>
+                <div class="stampino"><i class="fa-solid fa-brain"></i><h3>L'Assistente AI</h3><p>Bot intelligente per chattare.</p></div>
             </div>
         </div>
+
+        <div id="sezione-miei-bot" class="sezione">
+            <h1 class="titolo-sezione">I Miei Bot</h1>
+            <p class="sottotitolo">Gestisci i bot che hai già creato e configurali.</p>
+            <div class="box-vuoto">
+                <i class="fa-solid fa-box-open"></i>
+                <h2>Non hai ancora creato nessun bot</h2>
+                <p>Vai nella sezione "Crea Nuovo Bot" per iniziare.</p>
+            </div>
+        </div>
+
+        <div id="sezione-statistiche" class="sezione">
+            <h1 class="titolo-sezione">Statistiche Vendite</h1>
+            <p class="sottotitolo">Controlla quanto stanno guadagnando i tuoi bot Mercante.</p>
+            <div class="box-vuoto">
+                <i class="fa-solid fa-chart-pie"></i>
+                <h2>Dati non ancora disponibili</h2>
+                <p>Inizia a vendere per vedere i tuoi guadagni qui.</p>
+            </div>
+        </div>
+
+        <div id="sezione-vip" class="sezione">
+            <h1 class="titolo-sezione">Abbonamento VIP</h1>
+            <p class="sottotitolo">Rimuovi il marchio @lele3000 dai tuoi bot e sblocca funzioni premium.</p>
+            <div class="box-vuoto">
+                <i class="fa-solid fa-gem" style="color: #00f3ff;"></i>
+                <h2 style="color: #00f3ff;">Passa al livello superiore</h2>
+                <p>Attualmente stai usando il piano Standard gratuito.</p>
+            </div>
+        </div>
+
     </div>
 
+    <script>
+        function cambiaSezione(nomeSezione, elementoCliccato) {
+            // 1. Spengo tutti i bottoni del menu
+            let bottoni = document.querySelectorAll('.menu-item');
+            bottoni.forEach(bottone => bottone.classList.remove('attivo'));
+            
+            // 2. Accendo solo il bottone che ho appena cliccato
+            elementoCliccato.classList.add('attivo');
+
+            // 3. Nascondo tutte le "stanze"
+            let sezioni = document.querySelectorAll('.sezione');
+            sezioni.forEach(sezione => sezione.classList.remove('attiva'));
+
+            // 4. Mostro solo la "stanza" giusta
+            document.getElementById('sezione-' + nomeSezione).classList.add('attiva');
+        }
+    </script>
 </body>
 </html>
+
