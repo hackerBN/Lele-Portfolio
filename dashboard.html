@@ -7,145 +7,47 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* Sfondo e impostazioni di base */
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #050508;
-            color: #ffffff;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+        body { margin: 0; padding: 0; background-color: #050508; color: #ffffff; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; overflow: hidden; }
 
-        /* Il menu laterale fisso */
-        .sidebar {
-            width: 250px;
-            background-color: #0a0a10;
-            border-right: 1px solid rgba(0, 243, 255, 0.2);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-        }
+        .sidebar { width: 250px; background-color: #0a0a10; border-right: 1px solid rgba(0, 243, 255, 0.2); padding: 20px; display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #fff; text-shadow: 0 0 10px #00f3ff; margin-bottom: 40px; text-align: center; }
+        .menu-item { padding: 15px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: #a0a0b0; display: flex; align-items: center; gap: 15px; font-size: 1.1rem; }
+        .menu-item:hover, .menu-item.attivo { background-color: rgba(0, 243, 255, 0.1); color: #00f3ff; box-shadow: inset 5px 0 0 #00f3ff; }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 10px #00f3ff;
-            margin-bottom: 40px;
-            text-align: center;
-        }
+        .area-lavoro { flex: 1; padding: 40px; overflow-y: auto; position: relative; }
+        .titolo-sezione { font-size: 2rem; margin-bottom: 10px; }
+        .sottotitolo { color: #a0a0b0; margin-bottom: 40px; }
 
-        .menu-item {
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #a0a0b0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.1rem;
-        }
+        .sezione { display: none; animation: fadeIn 0.5s ease-in; }
+        .sezione.attiva { display: block; }
 
-        .menu-item:hover, .menu-item.attivo {
-            background-color: rgba(0, 243, 255, 0.1);
-            color: #00f3ff;
-            box-shadow: inset 5px 0 0 #00f3ff;
-        }
-
-        /* L'area principale dove si lavora */
-        .area-lavoro {
-            flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-        }
-
-        .titolo-sezione {
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .sottotitolo {
-            color: #a0a0b0;
-            margin-bottom: 40px;
-        }
-
-        /* Gestione delle "Stanze" (Sezioni) */
-        .sezione {
-            display: none; /* Nasconde tutte le sezioni di base */
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .sezione.attiva {
-            display: block; /* Mostra solo quella attiva */
-        }
-
-        /* La griglia con i 5 Stampini */
-        .griglia-stampini {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .stampino {
-            background-color: #12121a;
-            border: 1px solid #2d2d3d;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s;
-        }
-
-        .stampino i {
-            font-size: 3rem;
-            color: #4a4a6a;
-            margin-bottom: 15px;
-            transition: all 0.4s;
-        }
-
+        .griglia-stampini { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .stampino { background-color: #12121a; border: 1px solid #2d2d3d; border-radius: 12px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.4s; }
+        .stampino i { font-size: 3rem; color: #4a4a6a; margin-bottom: 15px; transition: all 0.4s; }
         .stampino h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
         .stampino p { color: #808090; font-size: 0.9rem; margin: 0; }
 
-        .stampino:hover {
-            transform: translateY(-5px);
-            border-color: #00f3ff;
-            box-shadow: 0 10px 20px rgba(0, 243, 255, 0.1);
-        }
-        .stampino:hover i {
-            color: #00f3ff;
-            text-shadow: 0 0 15px #00f3ff;
-            transform: scale(1.1);
-        }
+        .stampino:hover { transform: translateY(-5px); border-color: #00f3ff; box-shadow: 0 10px 20px rgba(0, 243, 255, 0.1); }
+        .stampino:hover i { color: #00f3ff; text-shadow: 0 0 15px #00f3ff; transform: scale(1.1); }
 
-        /* Stile per i messaggi delle sezioni vuote */
-        .box-vuoto {
-            background-color: #12121a;
-            border: 1px dashed #4a4a6a;
-            border-radius: 12px;
-            padding: 50px;
-            text-align: center;
-            color: #a0a0b0;
-        }
+        .box-vuoto { background-color: #12121a; border: 1px dashed #4a4a6a; border-radius: 12px; padding: 50px; text-align: center; color: #a0a0b0; }
+        
+        /* Bottoni speciali */
+        .btn-azione { background-color: #00f3ff; color: #050508; border: none; padding: 12px 25px; font-size: 1.1rem; border-radius: 5px; font-weight: bold; cursor: pointer; transition: all 0.3s; margin-top: 20px; }
+        .btn-azione:hover { box-shadow: 0 0 20px #00f3ff; transform: scale(1.05); }
 
-        .box-vuoto i { font-size: 4rem; color: #2d2d3d; margin-bottom: 20px; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Finestra a comparsa (Popup Configurazione) */
+        .popup-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; }
+        .popup-box { background-color: #1a1a24; padding: 40px; border-radius: 15px; border: 1px solid #00f3ff; width: 400px; box-shadow: 0 0 30px rgba(0,243,255,0.2); }
+        .popup-box input { width: 90%; padding: 10px; margin-bottom: 20px; background: #050508; border: 1px solid #2d2d3d; color: #fff; border-radius: 5px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <div class="logo">@lele3000<br><span style="font-size:0.8rem; color:#a0a0b0; text-shadow:none;">Control Center</span></div>
-        
         <div class="menu-item attivo" onclick="cambiaSezione('crea', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Crea Nuovo Bot</div>
         <div class="menu-item" onclick="cambiaSezione('miei-bot', this)"><i class="fa-solid fa-robot"></i> I Miei Bot</div>
         <div class="menu-item" onclick="cambiaSezione('statistiche', this)"><i class="fa-solid fa-chart-line"></i> Statistiche</div>
@@ -157,13 +59,12 @@
         <div id="sezione-crea" class="sezione attiva">
             <h1 class="titolo-sezione">Seleziona uno Stampino</h1>
             <p class="sottotitolo">Scegli il modello di partenza per il tuo nuovo bot.</p>
-
             <div class="griglia-stampini">
-                <div class="stampino"><i class="fa-solid fa-shield-halved"></i><h3>Il Guardiano</h3><p>Moderazione e supporto.</p></div>
-                <div class="stampino"><i class="fa-solid fa-shop"></i><h3>Il Mercante</h3><p>Vetrina per vendere in automatico.</p></div>
-                <div class="stampino"><i class="fa-solid fa-gamepad"></i><h3>L'Intrattenitore</h3><p>Livelli e giochi per la community.</p></div>
-                <div class="stampino"><i class="fa-solid fa-bullhorn"></i><h3>Il Notiziario</h3><p>Avvisi e notizie in automatico.</p></div>
-                <div class="stampino"><i class="fa-solid fa-brain"></i><h3>L'Assistente AI</h3><p>Bot intelligente per chattare.</p></div>
+                <div class="stampino" onclick="apriConfigurazione('Il Guardiano')"><i class="fa-solid fa-shield-halved"></i><h3>Il Guardiano</h3><p>Moderazione e supporto.</p></div>
+                <div class="stampino" onclick="apriConfigurazione('Il Mercante')"><i class="fa-solid fa-shop"></i><h3>Il Mercante</h3><p>Vetrina per vendere in automatico.</p></div>
+                <div class="stampino" onclick="apriConfigurazione('L\'Intrattenitore')"><i class="fa-solid fa-gamepad"></i><h3>L'Intrattenitore</h3><p>Livelli e giochi per la community.</p></div>
+                <div class="stampino" onclick="apriConfigurazione('Il Notiziario')"><i class="fa-solid fa-bullhorn"></i><h3>Il Notiziario</h3><p>Avvisi e notizie in automatico.</p></div>
+                <div class="stampino" onclick="apriConfigurazione('L\'Assistente AI')"><i class="fa-solid fa-brain"></i><h3>L'Assistente AI</h3><p>Bot intelligente per chattare.</p></div>
             </div>
         </div>
 
@@ -179,7 +80,7 @@
 
         <div id="sezione-statistiche" class="sezione">
             <h1 class="titolo-sezione">Statistiche Vendite</h1>
-            <p class="sottotitolo">Controlla quanto stanno guadagnando i tuoi bot Mercante.</p>
+            <p class="sottotitolo">Controlla quanto stanno guadagnando i tuoi bot.</p>
             <div class="box-vuoto">
                 <i class="fa-solid fa-chart-pie"></i>
                 <h2>Dati non ancora disponibili</h2>
@@ -189,33 +90,63 @@
 
         <div id="sezione-vip" class="sezione">
             <h1 class="titolo-sezione">Abbonamento VIP</h1>
-            <p class="sottotitolo">Rimuovi il marchio @lele3000 dai tuoi bot e sblocca funzioni premium.</p>
-            <div class="box-vuoto">
+            <p class="sottotitolo">Rimuovi il marchio @lele3000 e sblocca i bot personalizzati.</p>
+            <div class="box-vuoto" style="border-color: #00f3ff; background-color: rgba(0, 243, 255, 0.05);">
                 <i class="fa-solid fa-gem" style="color: #00f3ff;"></i>
-                <h2 style="color: #00f3ff;">Passa al livello superiore</h2>
-                <p>Attualmente stai usando il piano Standard gratuito.</p>
+                <h2 style="color: #ffffff;">Piano VIP Pro</h2>
+                <p style="color: #a0a0b0; font-size: 1.2rem; margin-bottom: 30px;">€ 9,99 / mese</p>
+                <ul style="text-align: left; display: inline-block; color: #a0a0b0; margin-bottom: 30px;">
+                    <li><i class="fa-solid fa-check" style="color: #00f3ff; font-size: 1rem;"></i> Nessun marchio nel tuo bot</li>
+                    <li><i class="fa-solid fa-check" style="color: #00f3ff; font-size: 1rem;"></i> Creazione illimitata di bot</li>
+                    <li><i class="fa-solid fa-check" style="color: #00f3ff; font-size: 1rem;"></i> Assistenza prioritaria 24/7</li>
+                </ul><br>
+                <button class="btn-azione" onclick="alert('In futuro qui si aprirà PayPal o Stripe per pagare!')">Acquista Ora</button>
+            </div>
+        </div>
+
+        <div class="popup-overlay" id="popup-bot">
+            <div class="popup-box">
+                <h2 id="nome-stampino-scelto" style="color: #00f3ff; margin-top: 0;">Configura Bot</h2>
+                <p style="color: #a0a0b0; font-size: 0.9rem;">Scegli il nome e inserisci il Token di Telegram per accendere il tuo bot.</p>
+                
+                <label style="color: #fff; display: block; margin-bottom: 5px;">Nome del tuo Bot</label>
+                <input type="text" placeholder="Es. Negozio Veloce Bot">
+                
+                <label style="color: #fff; display: block; margin-bottom: 5px;">Bot Token (da BotFather)</label>
+                <input type="password" placeholder="Incolla qui il codice numerico...">
+                
+                <button class="btn-azione" style="width: 100%; margin-bottom: 10px;" onclick="creaBotFinto()">Genera e Accendi</button>
+                <button class="btn-azione" style="width: 100%; background: transparent; border: 1px solid #a0a0b0; color: #a0a0b0;" onclick="chiudiConfigurazione()">Annulla</button>
             </div>
         </div>
 
     </div>
 
     <script>
+        // Cambio stanza
         function cambiaSezione(nomeSezione, elementoCliccato) {
-            // 1. Spengo tutti i bottoni del menu
-            let bottoni = document.querySelectorAll('.menu-item');
-            bottoni.forEach(bottone => bottone.classList.remove('attivo'));
-            
-            // 2. Accendo solo il bottone che ho appena cliccato
+            document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('attivo'));
             elementoCliccato.classList.add('attivo');
-
-            // 3. Nascondo tutte le "stanze"
-            let sezioni = document.querySelectorAll('.sezione');
-            sezioni.forEach(sezione => sezione.classList.remove('attiva'));
-
-            // 4. Mostro solo la "stanza" giusta
+            document.querySelectorAll('.sezione').forEach(s => s.classList.remove('attiva'));
             document.getElementById('sezione-' + nomeSezione).classList.add('attiva');
+        }
+
+        // Apre il popup di configurazione
+        function apriConfigurazione(nomeStampino) {
+            document.getElementById('nome-stampino-scelto').innerText = "Configura: " + nomeStampino;
+            document.getElementById('popup-bot').style.display = 'flex';
+        }
+
+        // Chiude il popup
+        function chiudiConfigurazione() {
+            document.getElementById('popup-bot').style.display = 'none';
+        }
+
+        // Finta creazione del bot
+        function creaBotFinto() {
+            alert('Il sistema sta generando il codice... (In una versione completa, qui il bot andrebbe davvero online!)');
+            chiudiConfigurazione();
         }
     </script>
 </body>
 </html>
-
